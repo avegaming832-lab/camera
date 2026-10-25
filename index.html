@@ -1,587 +1,344 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#08090c">
-<meta name="description" content="Ultra Pro Camera - live photography, night mode and moon image enhancement.">
-<title>ULTRA PRO CAMERA</title>
-
+<title>ULTRA PRO | Moon Camera</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#08090c;--panel:#15171c;--line:#30333b;--gold:#e9d5a1;--text:#fff}
-body{background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
-button,input{font:inherit}
-button{cursor:pointer;color:white}
-.app{max-width:600px;margin:auto;min-height:100vh;background:#0b0c10;display:flex;flex-direction:column}
-header{height:67px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid #202127}
-.brand{font-size:17px;font-weight:900;letter-spacing:2px}
-.brand span{color:var(--gold)}
-.sub{font-size:9px;color:#858995;letter-spacing:3px;margin-top:4px}
-.top-btn{width:39px;height:39px;border:1px solid #333640;border-radius:50%;background:#17191e;font-size:18px}
-.view{position:relative;background:#101116;overflow:hidden;aspect-ratio:3/4;max-height:65vh;min-height:330px;display:flex;align-items:center;justify-content:center}
-#video{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;display:none}
-#previewImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none;background:#08090c}
-#grid{position:absolute;inset:0;pointer-events:none;display:none;background:linear-gradient(90deg,transparent 33.1%,#ffffff25 33.3%,transparent 33.6%,transparent 66.4%,#ffffff25 66.7%,transparent 67%),linear-gradient(0deg,transparent 33.1%,#ffffff25 33.3%,transparent 33.6%,transparent 66.4%,#ffffff25 66.7%,transparent 67%)}
-#status{position:absolute;top:15px;left:14px;right:14px;display:flex;justify-content:space-between;align-items:center;gap:8px;z-index:2}
-.pill{background:#0009;border:1px solid #ffffff20;padding:8px 10px;border-radius:30px;font-size:10px;letter-spacing:1px;backdrop-filter:blur(10px)}
-.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#f44;margin-right:6px}
-#message{position:absolute;z-index:2;text-align:center;max-width:85%;color:#b9bac2;font-size:13px;line-height:1.6}
-#focus{position:absolute;width:66px;height:66px;border:1px solid #f6df98;display:none;z-index:3;pointer-events:none;transition:all .15s}
-#focus:before,#focus:after{content:"";position:absolute;background:var(--gold)}
-#focus:before{height:1px;width:12px;top:32px;left:26px}
-#focus:after{width:1px;height:12px;top:26px;left:32px}
-.mode-row{display:flex;justify-content:center;align-items:center;gap:27px;padding:18px 8px 10px}
-.mode{background:none;border:0;color:#888;font-size:12px;letter-spacing:1px;padding:7px 0}
-.mode.active{color:var(--gold);font-weight:bold}
-.mode.active:after{content:"";display:block;height:2px;background:var(--gold);margin-top:8px;border-radius:4px}
-.zoom-row{display:flex;justify-content:center;align-items:center;gap:12px;padding:8px 12px 15px}
-.zoom{width:44px;height:44px;border-radius:50%;background:#1a1c21;border:1px solid #30333b;font-size:12px}
-.zoom.active{background:#3b3323;color:#ffe7a9;border-color:#e9d5a1}
-.zoom-label{font-size:10px;color:#aaa;min-width:32px;text-align:center}
-.control-panel{padding:16px 20px 20px;background:#111216;border-top:1px solid #22242a}
-.slider-head{display:flex;justify-content:space-between;font-size:11px;color:#b7b9c2;margin-bottom:13px}
-input[type=range]{width:100%;accent-color:var(--gold);height:4px}
-.actions{display:flex;align-items:center;justify-content:space-between;margin-top:22px}
-.small-action{background:transparent;border:0;display:flex;align-items:center;flex-direction:column;gap:7px;min-width:58px;color:#ddd;font-size:10px}
-.icon-circle{width:43px;height:43px;border-radius:50%;border:1px solid #41434b;display:grid;place-items:center;font-size:20px;background:#202127}
-.shutter{width:75px;height:75px;border-radius:50%;border:4px solid #fff;background:white;box-shadow:0 0 0 4px #ffffff30;display:grid;place-items:center}
-.shutter span{width:59px;height:59px;border-radius:50%;background:linear-gradient(145deg,#fff,#d7d7d7);display:block}
+*{box-sizing:border-box}
+body{margin:0;background:#08090c;color:white;font-family:Arial,sans-serif}
+button{cursor:pointer;color:white;font:inherit}
+.app{max-width:600px;margin:auto;min-height:100vh;background:#0e0f13}
+header{height:65px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #292b31}
+.brand{font-size:18px;font-weight:900;letter-spacing:2px}
+.brand span{color:#e9d5a1}
+button.control{background:#202127;border:1px solid #41434b;border-radius:30px;padding:11px 14px}
+.view{position:relative;height:min(60vh,520px);min-height:340px;background:#090a0e;overflow:hidden;display:flex;align-items:center;justify-content:center}
+#video,#preview{position:absolute;width:100%;height:100%;object-fit:contain}
+#video{display:none}
+#preview{display:none}
+.status{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;z-index:2}
+.pill{background:#000a;border:1px solid #ffffff25;border-radius:20px;padding:9px;font-size:11px}
+#message{text-align:center;color:#aaa;font-size:13px;line-height:1.8;padding:20px}
+.modes,.zooms{display:flex;justify-content:center;gap:15px;padding:15px 5px}
+.modes button{background:none;border:0;color:#92939a;font-size:12px;padding:8px}
+.modes button.active{color:#e9d5a1;border-bottom:2px solid #e9d5a1}
+.zooms button{border:1px solid #393b42;border-radius:50%;width:44px;height:44px;background:#202127;font-size:12px}
+.zooms button.active{background:#463b25;border-color:#e9d5a1;color:#ffe5a2}
+.panel{padding:15px 20px 24px;background:#14151a}
+.label{display:flex;justify-content:space-between;font-size:12px;color:#bbb;margin-bottom:12px}
+input[type=range]{width:100%;accent-color:#e9d5a1}
+.actions{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-top:20px}
+.action{background:none;border:0;display:flex;align-items:center;flex-direction:column;gap:7px;font-size:10px;min-width:50px}
+.circle{width:43px;height:43px;border:1px solid #454750;border-radius:50%;display:grid;place-items:center;font-size:20px;background:#23252b}
+.shutter{width:72px;height:72px;flex-shrink:0;border-radius:50%;border:5px solid white;background:#eee;box-shadow:0 0 0 4px #ffffff30}
 .shutter:active{transform:scale(.94)}
-.notice{font-size:10px;line-height:1.6;text-align:center;color:#7d808a;margin-top:18px}
-.bottom{padding:12px 20px 22px;text-align:center;color:#555963;font-size:9px;letter-spacing:2px}
-.gallery{display:flex;gap:9px;overflow-x:auto;padding:12px 15px;background:#0c0d11}
-.thumb{width:57px;height:57px;flex-shrink:0;border-radius:9px;object-fit:cover;border:1px solid #333;cursor:pointer}
-.thumb.empty{display:grid;place-items:center;color:#999;background:#17181e;font-size:21px}
-.overlay{position:fixed;inset:0;background:#000d;z-index:10;display:none;align-items:center;justify-content:center;padding:18px}
+.hint{text-align:center;color:#858792;font-size:11px;line-height:1.6;margin:17px 0 0}
+#gallery{display:flex;gap:8px;padding:12px;overflow:auto}
+.thumb{width:60px;height:60px;flex-shrink:0;object-fit:cover;border-radius:8px;border:1px solid #41434b}
+.overlay{display:none;position:fixed;inset:0;background:#000e;z-index:10;align-items:center;justify-content:center;padding:14px}
 .overlay.show{display:flex}
-.modal{width:100%;max-width:450px;max-height:90vh;overflow:auto;background:#14151a;border:1px solid #373943;border-radius:20px;padding:19px}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.modal h2{font-size:15px;letter-spacing:1px}
-.close{background:#272830;border:0;border-radius:50%;width:34px;height:34px;font-size:20px}
-#result{display:block;width:100%;max-height:48vh;object-fit:contain;background:#08090c;border-radius:10px}
-.modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
-.action-btn{flex:1;min-width:100px;background:#24262d;border:1px solid #3c3e47;border-radius:10px;padding:13px 8px;font-size:11px}
-.action-btn.primary{background:#e9d5a1;color:#17130b;border:0;font-weight:bold}
-#toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#eee;color:#111;padding:12px 17px;border-radius:30px;font-size:12px;z-index:30;display:none;width:max-content;max-width:90%}
-@media(min-width:601px){body{padding:20px 0}.app{border:1px solid #282a31;border-radius:20px;overflow:hidden;min-height:0}.view{max-height:560px}}
+.modal{width:100%;max-width:480px;max-height:94vh;overflow:auto;background:#17181d;border:1px solid #3c3e45;border-radius:16px;padding:15px}
+.modalhead{display:flex;justify-content:space-between;align-items:center}
+.modalhead button{font-size:23px;background:#292a31;border:0;border-radius:50%;width:38px;height:38px}
+#result{width:100%;max-height:65vh;object-fit:contain;background:#08090c;margin-top:12px}
+.modalactions{display:flex;gap:8px;margin-top:12px}
+.modalactions button{flex:1;background:#303139;border:0;border-radius:8px;padding:12px 5px;font-size:11px}
+.modalactions .gold{background:#e9d5a1;color:#15120b}
+.note{font-size:11px;color:#999;line-height:1.6;text-align:center}
+#toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:white;color:#111;padding:12px 18px;border-radius:25px;font-size:12px;z-index:20;width:max-content;max-width:90%}
 </style>
 </head>
-
 <body>
 <div class="app">
 <header>
-  <button class="top-btn" id="switch" aria-label="Switch camera">⟳</button>
-  <div style="text-align:center">
-    <div class="brand">ULTRA <span>PRO</span></div>
-    <div class="sub">MOBILE PHOTOGRAPHY</div>
-  </div>
-  <button class="top-btn" id="gridBtn" aria-label="Grid">▦</button>
+<button class="control" id="switch">⟳</button>
+<div style="text-align:center"><div class="brand">ULTRA <span>PRO</span></div><div style="font-size:9px;color:#858792;letter-spacing:2px;margin-top:4px">MOON PHOTOGRAPHY</div></div>
+<button class="control" id="gridBtn">▦</button>
 </header>
 
-<section class="view" id="view">
-  <video id="video" autoplay playsinline muted></video>
-  <img id="previewImg" alt="Captured photo preview">
-  <div id="grid"></div>
-  <div id="status">
-    <div class="pill"><span class="dot"></span><span id="cameraStatus">CAMERA OFF</span></div>
-    <div class="pill" id="modeLabel">PHOTO MODE</div>
-  </div>
-  <div id="message">ULTRA PRO CAMERA<br>Tap START CAMERA to begin</div>
-  <div id="focus"></div>
-</section>
-
-<div class="mode-row">
-  <button class="mode active" data-mode="photo">PHOTO</button>
-  <button class="mode" data-mode="night">NIGHT</button>
-  <button class="mode" data-mode="moon">MOON AI</button>
+<div class="view" id="view">
+<video id="video" autoplay playsinline muted></video>
+<img id="preview" alt="Captured photo">
+<div class="status"><span class="pill" id="status">CAMERA OFF</span><span class="pill" id="modeLabel">PHOTO</span></div>
+<div id="message">ULTRA PRO CAMERA<br>START CAMERA dabao aur permission allow karo.</div>
+<div id="grid" style="display:none;position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 33%,#ffffff30 33.3%,transparent 33.6%,transparent 66%,#ffffff30 66.3%,transparent 66.6%),linear-gradient(0deg,transparent 33%,#ffffff30 33.3%,transparent 33.6%,transparent 66%,#ffffff30 66.3%,transparent 66.6%)"></div>
 </div>
 
-<div class="zoom-row">
-  <button class="zoom active" data-zoom="1">1x</button>
-  <button class="zoom" data-zoom="2">2x</button>
-  <button class="zoom" data-zoom="3">3x</button>
-  <button class="zoom" data-zoom="5">5x</button>
-  <button class="zoom" data-zoom="10">10x</button>
-  <span class="zoom-label" id="zoomLabel">1.0x</span>
+<div class="modes">
+<button class="active" data-mode="photo">PHOTO</button>
+<button data-mode="night">NIGHT</button>
+<button data-mode="moon">MOON AI</button>
 </div>
 
-<div class="control-panel">
-  <div class="slider-head">
-    <label for="zoomRange">ZOOM</label>
-    <span id="rangeValue">1.0x</span>
-  </div>
-  <input id="zoomRange" type="range" min="1" max="10" step=".1" value="1">
-
-  <div class="actions">
-    <button class="small-action" id="openGallery">
-      <span class="icon-circle">▧</span>GALLERY
-    </button>
-    <button class="small-action" id="startBtn">
-      <span class="icon-circle" id="startIcon">◉</span><span id="startLabel">START CAMERA</span>
-    </button>
-    <button class="shutter" id="capture" aria-label="Take photo"><span></span></button>
-    <button class="small-action" id="enhanceLast">
-      <span class="icon-circle">✧</span>ENHANCE
-    </button>
-    <button class="small-action" id="downloadLast">
-      <span class="icon-circle">↓</span>SAVE
-    </button>
-  </div>
-  <p class="notice" id="hint">For best Moon photos: use a steady phone and tap MOON AI.</p>
+<div class="zooms">
+<button class="active" data-z="1">1x</button>
+<button data-z="2">2x</button>
+<button data-z="3">3x</button>
+<button data-z="5">5x</button>
+<button data-z="10">10x</button>
 </div>
 
-<div class="gallery" id="gallery">
-  <div class="thumb empty">＋</div>
+<div class="panel">
+<div class="label"><span>DIGITAL / HARDWARE ZOOM</span><span id="zoomVal">1.0x</span></div>
+<input type="range" id="zoom" min="1" max="10" step=".1" value="1">
+<div class="actions">
+<button class="action" id="start"><span class="circle">◉</span><span id="startText">START CAMERA</span></button>
+<button class="shutter" id="capture" aria-label="Capture photo"></button>
+<button class="action" id="enhance"><span class="circle">✧</span><span>ENHANCE</span></button>
+<button class="action" id="save"><span class="circle">↓</span><span>SAVE</span></button>
 </div>
-<div class="bottom">ULTRA PRO CAMERA · BUILT FOR THE NIGHT</div>
+<p class="hint" id="hint">Moon mode: phone ko stable rakho aur Chand par focus karo.</p>
+</div>
+
+<div id="gallery"></div>
+<p class="note">ULTRA PRO CAMERA · ALL DEVICES</p>
 </div>
 
 <div class="overlay" id="overlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h2 id="resultTitle">YOUR PHOTO</h2>
-      <button class="close" id="closeResult">×</button>
-    </div>
-    <img id="result" alt="Your captured photo">
-    <div class="modal-actions">
-      <button class="action-btn" id="originalBtn">ORIGINAL</button>
-      <button class="action-btn primary" id="enhanceBtn">✧ ENHANCE</button>
-      <button class="action-btn" id="saveBtn">↓ SAVE PHOTO</button>
-    </div>
-    <p class="notice">Enhancement changes brightness, contrast and sharpness. It cannot recover details your camera did not capture.</p>
-  </div>
+<div class="modal">
+<div class="modalhead"><strong id="resultTitle">YOUR PHOTO</strong><button id="close">×</button></div>
+<img id="result" alt="Photo result">
+<div class="modalactions">
+<button id="original">ORIGINAL</button>
+<button class="gold" id="enhanceResult">✧ ENHANCE</button>
+<button id="saveResult">↓ SAVE</button>
 </div>
-
+<p class="note">Enhancement improves captured pixels; it cannot guarantee real details absent from the original image.</p>
+</div>
+</div>
 <div id="toast"></div>
 
 <script>
 (() => {
-  const $ = id => document.getElementById(id);
-  const video = $('video');
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d', {willReadFrequently:true});
-  let stream = null;
-  let facing = 'environment';
-  let mode = 'photo';
-  let zoom = 1;
-  let nativeZoom = false;
-  let photos = [];
-  let currentPhoto = null;
-  let currentOriginal = null;
-  let gridOn = false;
-  let busy = false;
+const $=id=>document.getElementById(id);
+const video=$('video');
+let stream=null, facing='environment', mode='photo', zoom=1;
+let photos=[], current=null, gridOn=false, busy=false;
+let cameraZoom=false;
 
-  function toast(text) {
-    const el = $('toast');
-    el.textContent = text;
-    el.style.display = 'block';
-    clearTimeout(toast.timer);
-    toast.timer = setTimeout(() => el.style.display='none', 3000);
-  }
+function toast(t){
+ const el=$('toast');el.textContent=t;el.style.display='block';
+ clearTimeout(toast.timer);
+ toast.timer=setTimeout(()=>el.style.display='none',3000);
+}
 
-  function setStatus(text) {
-    $('cameraStatus').textContent = text;
-  }
+function stopCamera(){
+ if(stream)stream.getTracks().forEach(t=>t.stop());
+ stream=null;video.srcObject=null;video.style.display='none';
+ $('status').textContent='CAMERA OFF';
+ $('startText').textContent='START CAMERA';
+ $('message').style.display='block';
+ cameraZoom=false;
+}
 
-  async function startCamera() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      toast('Camera needs HTTPS or localhost. Open your GitHub Pages link.');
-      return;
-    }
-
-    stopCamera(false);
-    $('message').textContent = 'Opening camera…';
-
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: {
-          facingMode: {ideal: facing},
-          width: {ideal: 1920},
-          height: {ideal: 1080}
-        }
-      });
-
-      video.srcObject = stream;
-      await video.play();
-
-      $('video').style.display = 'block';
-      $('previewImg').style.display = 'none';
-      $('message').style.display = 'none';
-      $('startLabel').textContent = 'STOP CAMERA';
-      $('startIcon').textContent = 'Ⅱ';
-      setStatus('LIVE CAMERA');
-
-      const track = stream.getVideoTracks()[0];
-      const caps = track.getCapabilities ? track.getCapabilities() : {};
-      nativeZoom = !!(caps.zoom && typeof caps.zoom.min === 'number');
-
-      if (nativeZoom) {
-        const z = caps.zoom;
-        $('zoomRange').min = Math.max(1, z.min);
-        $('zoomRange').max = Math.min(10, z.max);
-      } else {
-        $('zoomRange').min = 1;
-        $('zoomRange').max = 10;
-      }
-
-      zoom = 1;
-      $('zoomRange').value = 1;
-      updateZoom();
-      toast('Camera started!');
-    } catch (err) {
-      stopCamera(false);
-      $('message').style.display = 'block';
-      $('message').innerHTML =
-        'CAMERA ACCESS FAILED<br>Allow camera permission in your browser settings, then tap START CAMERA.';
-      setStatus('CAMERA OFF');
-
-      if (err.name === 'NotAllowedError') {
-        toast('Camera permission denied. Allow it in browser settings.');
-      } else if (err.name === 'NotFoundError') {
-        toast('No available camera found on this device.');
-      } else {
-        toast('Camera could not start. Check HTTPS and camera access.');
-      }
-    }
-  }
-
-  function stopCamera(showMessage = true) {
-    if (stream) {
-      stream.getTracks().forEach(t => t.stop());
-      stream = null;
-    }
-    video.srcObject = null;
-    video.style.display = 'none';
-    $('startLabel').textContent = 'START CAMERA';
-    $('startIcon').textContent = '◉';
-    nativeZoom = false;
-    setStatus('CAMERA OFF');
-    if (showMessage) {
-      $('message').style.display = 'block';
-      $('message').innerHTML = 'ULTRA PRO CAMERA<br>Tap START CAMERA to begin';
-    }
-  }
-
-  async function updateZoom() {
-    $('zoomLabel').textContent = zoom.toFixed(1) + 'x';
-    $('rangeValue').textContent = zoom.toFixed(1) + 'x';
-    document.querySelectorAll('.zoom').forEach(btn => {
-      btn.classList.toggle('active', Number(btn.dataset.zoom) === zoom);
-    });
-
-    if (stream && nativeZoom) {
-      try {
-        await stream.getVideoTracks()[0].applyConstraints({
-          advanced: [{zoom: Math.max(1, zoom)}]
-        });
-      } catch (e) {
-        nativeZoom = false;
-        video.style.transform = `scale(${zoom})`;
-      }
-    } else {
-      video.style.transform = `scale(${zoom})`;
-    }
-  }
-
-  function setMode(next) {
-    mode = next;
-    document.querySelectorAll('.mode').forEach(b =>
-      b.classList.toggle('active', b.dataset.mode === mode)
-    );
-    $('modeLabel').textContent = {
-      photo: 'PHOTO MODE',
-      night: 'NIGHT MODE',
-      moon: 'MOON AI MODE'
-    }[mode];
-
-    $('hint').textContent = {
-      photo: 'Tap shutter to capture a photo.',
-      night: 'Keep your phone steady in low light.',
-      moon: 'Use a stable phone and zoom in on the Moon.'
-    }[mode];
-  }
-
-  function drawZoomedFrame() {
-    const vw = video.videoWidth;
-    const vh = video.videoHeight;
-    if (!vw || !vh) throw new Error('Camera is not ready.');
-
-    canvas.width = Math.min(1920, vw);
-    canvas.height = Math.round(canvas.width * vh / vw);
-
-    let sx = 0, sy = 0, sw = vw, sh = vh;
-
-    // If hardware zoom is unavailable, crop the frame digitally.
-    if (!nativeZoom && zoom > 1) {
-      sw = vw / zoom;
-      sh = vh / zoom;
-      sx = (vw - sw) / 2;
-      sy = (vh - sh) / 2;
-    }
-
-    ctx.drawImage(video, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
-  }
-
-  function processImage(sourceCanvas, strength) {
-    const w = sourceCanvas.width;
-    const h = sourceCanvas.height;
-    const out = document.createElement('canvas');
-    out.width = w;
-    out.height = h;
-    const octx = out.getContext('2d', {willReadFrequently:true});
-    octx.drawImage(sourceCanvas, 0, 0);
-
-    if (!strength) return out;
-
-    const image = octx.getImageData(0, 0, w, h);
-    const data = image.data;
-    const original = new Uint8ClampedArray(data);
-    const contrast = strength === 2 ? 1.40 : 1.18;
-    const brightness = strength === 2 ? -5 : 3;
-    const saturation = strength === 2 ? 1.10 : 1.04;
-    const factor = (259 * (contrast * 255 + 255)) /
-                   (255 * (259 - contrast * 255));
-
-    for (let i = 0; i < data.length; i += 4) {
-      let r = original[i], g = original[i+1], b = original[i+2];
-
-      r = factor * (r - 128) + 128 + brightness;
-      g = factor * (g - 128) + 128 + brightness;
-      b = factor * (b - 128) + 128 + brightness;
-
-      const gray = .299*r + .587*g + .114*b;
-      data[i] = gray + (r-gray)*saturation;
-      data[i+1] = gray + (g-gray)*saturation;
-      data[i+2] = gray + (b-gray)*saturation;
-    }
-
-    octx.putImageData(image, 0, 0);
-
-    // Mild unsharp mask for local edge contrast.
-    if (strength === 2 && w * h <= 1200000) {
-      const base = octx.getImageData(0, 0, w, h);
-      const src = new Uint8ClampedArray(base.data);
-      const dst = base.data;
-      for (let y = 1; y < h-1; y++) {
-        for (let x = 1; x < w-1; x++) {
-          const i = (y*w+x)*4;
-          for (let c = 0; c < 3; c++) {
-            const neighbours =
-              src[i-4+c] + src[i+4+c] +
-              src[i-w*4+c] + src[i+w*4+c];
-            const blur = neighbours / 4;
-            dst[i+c] = Math.max(0, Math.min(255,
-              src[i+c] + (src[i+c]-blur)*0.28));
-          }
-        }
-      }
-      octx.putImageData(base, 0, 0);
-    }
-
-    return out;
-  }
-
-  function openPhoto(photo) {
-    currentPhoto = photo.enhanced || photo.original;
-    currentOriginal = photo.original;
-    $('result').src = currentPhoto;
-    $('resultTitle').textContent = photo.enhanced ? 'ENHANCED PHOTO' : 'YOUR PHOTO';
-    $('overlay').classList.add('show');
-  }
-
-  function capturePhoto() {
-    if (!stream || !video.videoWidth) {
-      toast('First tap START CAMERA.');
-      return;
-    }
-    if (busy) return;
-    busy = true;
-
-    try {
-      drawZoomedFrame();
-      const original = canvas.toDataURL('image/jpeg', .94);
-      const strength = mode === 'moon' ? 2 : mode === 'night' ? 1 : 0;
-      let enhanced = null;
-
-      if (strength) {
-        const result = processImage(canvas, strength);
-        enhanced = result.toDataURL('image/jpeg', .94);
-      }
-
-      const photo = {
-        original,
-        enhanced,
-        time: new Date().toLocaleTimeString()
-      };
-
-      photos.unshift(photo);
-      currentPhoto = enhanced || original;
-      currentOriginal = original;
-      renderGallery();
-      openPhoto(photo);
-      toast(strength ? 'Photo captured and enhanced.' : 'Photo captured!');
-    } catch (e) {
-      toast(e.message || 'Could not capture photo.');
-    } finally {
-      busy = false;
-    }
-  }
-
-  function renderGallery() {
-    const gallery = $('gallery');
-    gallery.innerHTML = '';
-
-    if (!photos.length) {
-      const empty = document.createElement('div');
-      empty.className = 'thumb empty';
-      empty.textContent = '＋';
-      gallery.appendChild(empty);
-      return;
-    }
-
-    photos.slice(0, 20).forEach(photo => {
-      const img = document.createElement('img');
-      img.className = 'thumb';
-      img.src = photo.enhanced || photo.original;
-      img.alt = 'Captured photo';
-      img.addEventListener('click', () => openPhoto(photo));
-      gallery.appendChild(img);
-    });
-  }
-
-  function enhanceCurrent() {
-    if (!currentOriginal) {
-      toast('Capture a photo first.');
-      return;
-    }
-
-    const photo = photos.find(p => p.original === currentOriginal);
-    if (photo && photo.enhanced) {
-      currentPhoto = photo.enhanced;
-      $('result').src = currentPhoto;
-      $('resultTitle').textContent = 'ENHANCED PHOTO';
-      toast('Showing enhanced photo.');
-      return;
-    }
-
-    const img = new Image();
-    img.onload = () => {
-      const c = document.createElement('canvas');
-      const scale = Math.min(1, 1600 / img.width);
-      c.width = Math.round(img.width * scale);
-      c.height = Math.round(img.height * scale);
-      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-      const result = processImage(c, 2).toDataURL('image/jpeg', .94);
-
-      if (photo) photo.enhanced = result;
-      currentPhoto = result;
-      $('result').src = result;
-      $('resultTitle').textContent = 'ENHANCED PHOTO';
-      renderGallery();
-      toast('Enhancement complete.');
-    };
-    img.src = currentOriginal;
-  }
-
-  function savePhoto() {
-    if (!currentPhoto) {
-      toast('Capture a photo first.');
-      return;
-    }
-    const a = document.createElement('a');
-    a.href = currentPhoto;
-    a.download = 'ultra-pro-' + Date.now() + '.jpg';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  }
-
-  $('startBtn').addEventListener('click', () => {
-    if (stream) stopCamera();
-    else startCamera();
+async function startCamera(){
+ if(stream){stopCamera();return}
+ if(!navigator.mediaDevices?.getUserMedia){
+  toast('Camera ke liye HTTPS website use karo.');return;
+ }
+ $('message').textContent='Opening camera...';
+ try{
+  stream=await navigator.mediaDevices.getUserMedia({
+   audio:false,
+   video:{facingMode:{ideal:facing},width:{ideal:1920},height:{ideal:1080}}
   });
+  video.srcObject=stream;
+  await video.play();
+  video.style.display='block';
+  $('preview').style.display='none';
+  $('message').style.display='none';
+  $('status').textContent='LIVE CAMERA';
+  $('startText').textContent='STOP CAMERA';
+  const caps=stream.getVideoTracks()[0].getCapabilities?.()||{};
+  cameraZoom=!!caps.zoom;
+  if(cameraZoom){
+   $('zoom').min=Math.max(1,caps.zoom.min);
+   $('zoom').max=Math.min(10,caps.zoom.max);
+  }else{
+   $('zoom').min=1;$('zoom').max=10;
+  }
+  zoom=1;$('zoom').value=1;updateZoom();
+  toast('Camera ready!');
+ }catch(e){
+  stopCamera();
+  $('message').innerHTML='CAMERA ACCESS FAILED<br>Browser settings mein camera permission Allow karo.';
+  toast('Camera start nahi hua: permission aur HTTPS check karo.');
+ }
+}
 
-  $('capture').addEventListener('click', capturePhoto);
+async function updateZoom(){
+ $('zoomVal').textContent=zoom.toFixed(1)+'x';
+ document.querySelectorAll('[data-z]').forEach(b=>b.classList.toggle('active',Number(b.dataset.z)===zoom));
+ if(!stream)return;
+ if(cameraZoom){
+  try{
+   await stream.getVideoTracks()[0].applyConstraints({advanced:[{zoom:zoom}]});
+   video.style.transform='none';
+   return;
+  }catch(e){cameraZoom=false}
+ }
+ video.style.transform=`scale(${zoom})`;
+}
 
-  $('switch').addEventListener('click', async () => {
-    facing = facing === 'environment' ? 'user' : 'environment';
-    if (stream) await startCamera();
-    else toast('Camera switched. Start camera to use it.');
-  });
+function makeFrame(){
+ if(!stream||!video.videoWidth)throw Error('Pehle camera start karo.');
+ const c=document.createElement('canvas');
+ const w=video.videoWidth,h=video.videoHeight;
+ const cropZoom=cameraZoom?1:zoom;
+ const sw=w/cropZoom,sh=h/cropZoom;
+ const sx=(w-sw)/2,sy=(h-sh)/2;
+ const maxW=1920,scale=Math.min(1,maxW/sw);
+ c.width=Math.round(sw*scale);c.height=Math.round(sh*scale);
+ const x=c.getContext('2d',{willReadFrequently:true});
+ x.drawImage(video,sx,sy,sw,sh,0,0,c.width,c.height);
+ return c;
+}
 
-  $('gridBtn').addEventListener('click', () => {
-    gridOn = !gridOn;
-    $('grid').style.display = gridOn ? 'block' : 'none';
-    $('gridBtn').style.color = gridOn ? '#e9d5a1' : '#fff';
-  });
+/* Correct colour-safe enhancement.
+   No negative contrast factor, blue overlay, or artificial Moon texture. */
+function enhanceCanvas(source,level){
+ const out=document.createElement('canvas');
+ out.width=source.width;out.height=source.height;
+ const c=out.getContext('2d',{willReadFrequently:true});
+ c.drawImage(source,0,0);
+ const w=out.width,h=out.height;
+ const image=c.getImageData(0,0,w,h);
+ const d=image.data;
+ const original=new Uint8ClampedArray(d);
+ const contrast=level===2?1.17:1.08;
+ const brightness=level===2?2:4;
+ const saturation=level===2?1.03:1.01;
 
-  document.querySelectorAll('.mode').forEach(btn =>
-    btn.addEventListener('click', () => setMode(btn.dataset.mode))
-  );
+ for(let i=0;i<d.length;i+=4){
+  const r=original[i],g=original[i+1],b=original[i+2];
+  const gray=.299*r+.587*g+.114*b;
+  d[i]=Math.max(0,Math.min(255,((r-128)*contrast+128+brightness)*saturation+gray*(1-saturation)));
+  d[i+1]=Math.max(0,Math.min(255,((g-128)*contrast+128+brightness)*saturation+gray*(1-saturation)));
+  d[i+2]=Math.max(0,Math.min(255,((b-128)*contrast+128+brightness)*saturation+gray*(1-saturation)));
+  d[i+3]=original[i+3];
+ }
+ c.putImageData(image,0,0);
 
-  document.querySelectorAll('.zoom').forEach(btn =>
-    btn.addEventListener('click', () => {
-      zoom = Number(btn.dataset.zoom);
-      $('zoomRange').value = zoom;
-      updateZoom();
-    })
-  );
+ // Gentle edge sharpening, applied equally to RGB channels.
+ if(level===2&&w>2&&h>2&&w*h<=1600000){
+  const im=c.getImageData(0,0,w,h);
+  const src=new Uint8ClampedArray(im.data),dst=im.data;
+  for(let y=1;y<h-1;y++){
+   for(let x=1;x<w-1;x++){
+    const i=(y*w+x)*4;
+    for(let k=0;k<3;k++){
+     const avg=(src[i-4+k]+src[i+4+k]+src[i-w*4+k]+src[i+w*4+k])/4;
+     dst[i+k]=Math.max(0,Math.min(255,src[i+k]+(src[i+k]-avg)*.20));
+    }
+   }
+  }
+  c.putImageData(im,0,0);
+ }
+ return out;
+}
 
-  $('zoomRange').addEventListener('input', e => {
-    zoom = Number(e.target.value);
-    updateZoom();
-  });
+function showPhoto(p){
+ current=p;
+ $('result').src=p.enhanced||p.original;
+ $('resultTitle').textContent=p.enhanced?'ENHANCED PHOTO':'ORIGINAL PHOTO';
+ $('overlay').classList.add('show');
+}
 
-  $('openGallery').addEventListener('click', () => {
-    if (!photos.length) toast('Your captured photos will appear here.');
-    else openPhoto(photos[0]);
-  });
+function capture(){
+ if(busy)return;
+ try{
+  busy=true;
+  const frame=makeFrame();
+  const original=frame.toDataURL('image/jpeg',.95);
+  const level=mode==='moon'?2:mode==='night'?1:0;
+  const enhanced=level?enhanceCanvas(frame,level).toDataURL('image/jpeg',.95):null;
+  const p={original,enhanced};
+  photos.unshift(p);current=p;
+  renderGallery();showPhoto(p);
+  toast(level?'Photo enhanced!':'Photo captured!');
+ }catch(e){toast(e.message||'Photo capture failed.')}
+ finally{busy=false}
+}
 
-  $('enhanceLast').addEventListener('click', () => {
-    if (!photos.length) return toast('Capture a photo first.');
-    openPhoto(photos[0]);
-    enhanceCurrent();
-  });
+function renderGallery(){
+ const g=$('gallery');g.innerHTML='';
+ photos.slice(0,20).forEach(p=>{
+  const im=document.createElement('img');
+  im.className='thumb';im.src=p.enhanced||p.original;
+  im.alt='Captured photo';im.onclick=()=>showPhoto(p);g.appendChild(im);
+ });
+}
 
-  $('downloadLast').addEventListener('click', () => {
-    if (!photos.length) return toast('Capture a photo first.');
-    currentOriginal = photos[0].original;
-    currentPhoto = photos[0].enhanced || photos[0].original;
-    savePhoto();
-  });
+function enhanceCurrent(){
+ if(!current)return toast('Pehle photo lo.');
+ if(!current.enhanced){
+  const im=new Image();
+  im.onload=()=>{
+   const c=document.createElement('canvas');
+   const scale=Math.min(1,1600/im.width);
+   c.width=Math.round(im.width*scale);c.height=Math.round(im.height*scale);
+   c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+   current.enhanced=enhanceCanvas(c,2).toDataURL('image/jpeg',.95);
+   showPhoto(current);renderGallery();toast('Enhancement complete!');
+  };
+  im.src=current.original;
+ }else{
+  showPhoto(current);toast('Enhanced photo ready.');
+ }
+}
 
-  $('closeResult').addEventListener('click', () =>
-    $('overlay').classList.remove('show')
-  );
+function save(){
+ if(!current)return toast('Pehle photo lo.');
+ const a=document.createElement('a');
+ a.href=current.enhanced||current.original;
+ a.download='ultra-pro-moon-'+Date.now()+'.jpg';
+ document.body.appendChild(a);a.click();a.remove();
+}
 
-  $('enhanceBtn').addEventListener('click', enhanceCurrent);
+$('start').onclick=startCamera;
+$('capture').onclick=capture;
+$('switch').onclick=async()=>{
+ facing=facing==='environment'?'user':'environment';
+ if(stream){stopCamera();await startCamera()}
+ else toast('Camera switch selected.');
+};
 
-  $('originalBtn').addEventListener('click', () => {
-    if (!currentOriginal) return;
-    currentPhoto = currentOriginal;
-    $('result').src = currentOriginal;
-    $('resultTitle').textContent = 'ORIGINAL PHOTO';
-  });
+$('zoom').oninput=e=>{zoom=Number(e.target.value);updateZoom()};
+document.querySelectorAll('[data-z]').forEach(b=>b.onclick=()=>{
+ zoom=Number(b.dataset.z);$('zoom').value=zoom;updateZoom();
+});
 
-  $('saveBtn').addEventListener('click', savePhoto);
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{
+ mode=b.dataset.mode;
+ document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));
+ $('modeLabel').textContent=mode.toUpperCase()+(mode==='moon'?' AI':'');
+ $('hint').textContent=mode==='moon'
+ ?'Moon mode uses colour-safe contrast and sharpening.'
+ :mode==='night'?'Keep your phone steady in low light.':'Tap the shutter to take a photo.';
+});
 
-  $('overlay').addEventListener('click', e => {
-    if (e.target === $('overlay')) $('overlay').classList.remove('show');
-  });
+$('gridBtn').onclick=()=>{
+ gridOn=!gridOn;$('grid').style.display=gridOn?'block':'none';
+};
 
-  $('view').addEventListener('click', e => {
-    if (!stream || e.target.closest('#status')) return;
-    const rect = $('view').getBoundingClientRect();
-    const f = $('focus');
-    f.style.left = (e.clientX - rect.left - 33) + 'px';
-    f.style.top = (e.clientY - rect.top - 33) + 'px';
-    f.style.display = 'block';
-    setTimeout(() => f.style.display='none', 900);
-  });
-
-  window.addEventListener('pagehide', () => stopCamera(false));
+$('enhance').onclick=()=>{
+ if(!photos.length)return toast('Pehle photo lo.');
+ showPhoto(photos[0]);enhanceCurrent();
+};
+$('save').onclick=()=>{if(photos.length){current=photos[0];save()}else toast('Pehle photo lo.')};
+$('enhanceResult').onclick=enhanceCurrent;
+$('saveResult').onclick=save;
+$('original').onclick=()=>{
+ if(!current)return;
+ $('result').src=current.original;
+ $('resultTitle').textContent='ORIGINAL PHOTO';
+};
+$('close').onclick=()=>$('overlay').classList.remove('show');
+$('overlay').onclick=e=>{if(e.target===$('overlay'))$('overlay').classList.remove('show')};
+window.addEventListener('pagehide',stopCamera);
 })();
 </script>
 </body>
